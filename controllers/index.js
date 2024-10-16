@@ -40,6 +40,7 @@ export const addComicBookDetails = async (req, res) => {
       data: newComicBook,
     });
   } catch (error) {
+    console.error(error);
     res.status(500).json({
       success: false,
       message: "Failed to add comic book",
@@ -53,6 +54,14 @@ export const updateComicBookDetails = async (req, res) => {
   try {
     const { id } = req.params; // getting the id from the route params
     const updatedData = req.body; // updatedData will contain new updated data
+
+    // Validate the MongoDB ObjectID format
+    if (!id.match(/^[0-9a-fA-F]{24}$/)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid comic book ID format.",
+      });
+    }
 
     //finding the comicBook by id and updating the data
     const updatedComicBook = await comicBook.findByIdAndUpdate(
@@ -78,9 +87,50 @@ export const updateComicBookDetails = async (req, res) => {
       data: updatedComicBook,
     });
   } catch (error) {
+    console.error(error);
     res.status(500).json({
       success: false,
       message: "Failed to update the comic book",
+      error: error.message,
+    });
+  }
+};
+
+// Delete function to delete a comic book
+export const deleteComicBook = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Validate the MongoDB ObjectID format
+    if (!id.match(/^[0-9a-fA-F]{24}$/)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid comic book ID format.",
+      });
+    }
+
+    // Find and delete the comic book by ID
+    const response = await comicBook.findByIdAndDelete(id);
+
+    // If comic book not found, return 404
+    if (!response) {
+      res.status(404).json({
+        success: false,
+        message: `comic book with id:${id} not found!`,
+      });
+    }
+
+    // Successful deletion response
+    res.status(200).json({
+      success: true,
+      message: "Deleted comic book successfully",
+    });
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      success: false,
+      message: "Failed to delete comic book",
       error: error.message,
     });
   }
