@@ -1,6 +1,8 @@
 import express from "express";
 import mongoose from "mongoose";
 import comicsRouter from "./routes/index.js";
+import comicBook from "./model/ComicBook.js";
+import fs from "fs/promises";
 
 const app = express();
 app.use(express.json());
@@ -8,7 +10,6 @@ app.use(express.json());
 app.get("/", (req, res) => {
   res.send("Testing the server");
 });
-
 
 // routes for API management
 app.use("/api/data", comicsRouter);
@@ -21,6 +22,27 @@ const Connect = async () => {
   try {
     await mongoose.connect(uri);
     console.log("MongoDb Connected Successfully");
+
+    // Inserting Data into DB Collection
+    try {
+      // If there is existing data in the collection, then skip uploading new data
+      const dataExists = await comicBook.find();
+      if (dataExists.length === 0) {
+        console.log("Uploading JSON Data to mongodb");
+
+        // Reading comicBooks.json file from data folder using fs library for dummy data
+        const jsonData = JSON.parse(
+          await fs.readFile("./data/comicBooks.json", "utf-8")
+        );
+
+        const dataInserted = await comicBook.insertMany(jsonData);
+        if (dataInserted) {
+          console.log("Data Inserted Successfully");
+        }
+      }
+    } catch (error) {
+      console.log(`Error inserting Data`, error);
+    }
   } catch (error) {
     console.error("MongoDb connection failed", error);
   }
