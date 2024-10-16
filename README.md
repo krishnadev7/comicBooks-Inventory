@@ -50,6 +50,6 @@ Git, Node.js, npm (Node Package Manager)
 #### 5. Open your browser and navigate to http://localhost:8000 to view the application.
 
 ## Postman Collection 
-A Postman collection link contains a set of API requests grouped together as a collection, used for testing. Click the link below to import the collection into your Postman.
+A Postman collection link contains a set of API requests grouped together as a collection, used for testing. Copy the link below to import the collection into your Postman.
 
-[Postman collection link](https://api.postman.com/collections/17268524-b4812580-6fca-4656-999c-f4b1b5bd4d24?access_key=PMAT-01JAACAN31D9YGDRMMMBSYHSZ3)
+https://api.postman.com/collections/17268524-b4812580-6fca-4656-999c-f4b1b5bd4d24?access_key=PMAT-01JAACAN31D9YGDRMMMBSYHSZ3
